@@ -1,0 +1,30 @@
+/* Scroll reveal. Elements start hidden ONLY when JS runs (html.js) and motion is allowed.
+   Feel: short rise + fade on a long, soft deceleration curve, small staggers (~70 ms). */
+:root {
+  --reveal-ease: cubic-bezier(0.2, 0.55, 0.3, 1);
+  --reveal-dur: 760ms;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal]:not([data-revealed]),
+  .js [data-reveal-group]:not([data-revealed]) > *,
+  .js [data-reveal-text]:not([data-revealed]) .rv-w {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-y, 16px), 0) scale(var(--reveal-scale, 1));
+    filter: blur(var(--reveal-blur, 0px));
+  }
+  /* Transitions exist only until the reveal has finished (data-reveal-done), so they never
+     delay or override an element's own hover/active transitions afterwards. */
+  .js [data-reveal]:not([data-reveal-done]),
+  .js [data-reveal-group]:not([data-reveal-done]) > *,
+  .js [data-reveal-text]:not([data-reveal-done]) .rv-w {
+    transition:
+      opacity var(--reveal-dur) var(--reveal-ease),
+      transform var(--reveal-dur) var(--reveal-ease),
+      filter var(--reveal-dur) var(--reveal-ease);
+    transition-delay: calc(var(--reveal-delay, 0ms) + var(--i, 0) * var(--reveal-stagger, 70ms));
+  }
+}
+
+/* Words of RevealText: inline-block so transform works, keep normal wrapping. */
+.rv-w { display: inline-block; }

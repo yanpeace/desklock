@@ -1,0 +1,71 @@
+/* DeskLock design tokens. Every section reads these: never hard-code brand hex values elsewhere. */
+:root {
+  /* Graphite surfaces (warm-neutral, never pure black) */
+  --c-bg: #17181c;          /* page background (below the animated background) */
+  --c-graphite: #1c1d22;    /* app graphite */
+  --c-surface: #202020;     /* raised surface */
+  --c-surface-2: #2b2b2d;   /* controls, inputs */
+  --c-line: rgb(241 239 234 / 0.09);   /* hairlines */
+  --c-line-2: rgb(241 239 234 / 0.16); /* stronger borders, hover */
+
+  /* Ink */
+  --c-ink: #f1efea;                     /* primary text */
+  --c-ink-2: rgb(241 239 234 / 0.68);   /* secondary text */
+  --c-ink-3: rgb(241 239 234 / 0.44);   /* tertiary, captions */
+
+  /* Accents */
+  --c-amber: #f0a04b;
+  --c-amber-hi: #f6b868;
+  --c-amber-lo: #d9822b;
+  --g-amber: linear-gradient(180deg, #f6b868 0%, #d9822b 100%);
+  --c-blue: #5ab8e6;   /* "portal" blue */
+  --c-pink: #e0457b;   /* TV / party pink */
+  --c-green: #6fcf97;  /* success (copied, locked ok) */
+
+  /* Glass (the app's folder tiles / panels) */
+  --glass-bg: rgb(255 255 255 / 0.07);
+  --glass-bg-strong: rgb(255 255 255 / 0.12);
+  --glass-border: rgb(255 255 255 / 0.14);
+  --glass-highlight: inset 0 1px 0 rgb(255 255 255 / 0.18);
+  --glass-blur: blur(18px) saturate(1.4);
+
+  /* Radii: by hierarchy, not one value everywhere */
+  --r-xs: 6px;     /* chips, small buttons */
+  --r-sm: 10px;    /* inputs, code blocks */
+  --r-md: 16px;    /* icon tiles, panels */
+  --r-lg: 24px;    /* large surfaces, screens */
+  --r-pill: 999px;
+
+  /* Shadows: soft, layered, tinted by the graphite */
+  --sh-1: 0 1px 2px rgb(0 0 0 / 0.35);
+  --sh-2: 0 8px 24px -8px rgb(0 0 0 / 0.55), 0 2px 6px rgb(0 0 0 / 0.3);
+  --sh-3: 0 40px 80px -24px rgb(0 0 0 / 0.7), 0 12px 28px -12px rgb(0 0 0 / 0.5);
+  --glow-amber: 0 0 0 1px rgb(240 160 75 / 0.35), 0 10px 40px -10px rgb(240 160 75 / 0.55);
+
+  /* Type */
+  --font-sans: "Geist", "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-mono: "Geist Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  /* Type scale (fluid). Display = Instrument Serif, everything else Geist. */
+  --fs-display: clamp(2.9rem, 1.6rem + 6.2vw, 6.6rem); /* hero statement */
+  --fs-h2: clamp(2.1rem, 1.4rem + 3vw, 3.75rem);       /* section titles */
+  --fs-h3: 1.1875rem;   /* 19px card / step titles (sans, 560) */
+  --fs-lead: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-micro: 0.75rem;
+
+  /* Space & layout */
+  --gutter: clamp(16px, 4vw, 40px);
+  --maxw: 1180px;
+  --section-y: clamp(88px, 12vw, 168px);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);     /* default exits/entries */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* small overshoot */
+  --dur-1: 160ms;
+  --dur-2: 320ms;
+  --dur-3: 640ms;
+}

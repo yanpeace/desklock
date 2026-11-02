@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -p tsconfig.json && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "release:update": "node scripts/update-release.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

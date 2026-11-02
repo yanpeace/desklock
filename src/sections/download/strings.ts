@@ -1,0 +1,61 @@
+// Italian copy for the download section (same wording style as the user's gamestats /download page).
+export const s = {
+  eyebrow: "App per Windows",
+  title: "Scarica DeskLock per Windows",
+  lead:
+    "Una piccola app nella barra delle applicazioni: mette in ordine le icone del desktop, le blocca dove le hai lasciate e le raccoglie in cartelle. Gratis, senza account.",
+  button: "Scarica per Windows",
+  unsignedHint: "L'installer non è ancora firmato digitalmente: qui sotto trovi perché e come verificarlo.",
+  factsLabel: "Dettagli dell'installer",
+  factVersion: "Versione",
+  factSize: "Dimensione",
+  factSizeJoke: "Le cose belle richiedono megabyte. Il PC, invece, non se ne accorge.",
+  factDate: "Pubblicata il",
+  factHash: "SHA-256",
+  factRequirements: "Requisiti",
+  factRequirementsValue: "Windows 10 o 11 a 64 bit",
+  factRequirementsNote: "Non servono permessi di amministratore: si installa solo per il tuo utente.",
+  factPrice: "Prezzo",
+  factPriceValue: "Gratis, senza pubblicità",
+
+  warnTitle: "Perché Windows potrebbe mostrare un avviso",
+  warnText: [
+    "L'installer non è ancora firmato digitalmente. La firma richiede un certificato che costa centinaia di euro l'anno e DeskLock è un progetto indipendente e gratuito: per ora non lo abbiamo acquistato.",
+    "Windows SmartScreen si fida dei programmi firmati o già scaricati da molte persone, quindi può mostrare la schermata «Windows ha protetto il PC». Non significa che nel file sia stato trovato un virus: significa che Windows non conosce ancora l'autore.",
+  ],
+  warnSteps: [
+    { title: "Apri il file scaricato", text: "Se il browser ti avvisa che il file non viene scaricato spesso, scegli «Mantieni»." },
+    { title: "Clicca «Ulteriori informazioni»", text: "È il link sotto il testo della schermata blu." },
+    { title: "Clicca «Esegui comunque»", text: "Compare in basso, accanto a «Non eseguire». Poi segui l'installazione." },
+  ],
+  warnDoubt: "Hai un dubbio? Non eseguirlo:",
+  warnDoubtLink: "controlla prima il file",
+  mockLabel: "Illustrazione della schermata di Windows SmartScreen, in due passaggi",
+  mockStep1: "Passaggio 2: «Ulteriori informazioni»",
+  mockStep2: "Passaggio 3: «Esegui comunque»",
+  ssTitle: "Windows ha protetto il PC",
+  ssText:
+    "Microsoft Defender SmartScreen ha impedito l'avvio di un'app non riconosciuta. L'esecuzione di tale app potrebbe costituire un rischio per il PC.",
+  ssMore: "Ulteriori informazioni",
+  ssApp: "App:",
+  ssPublisher: "Autore:",
+  ssUnknown: "Autore sconosciuto",
+  ssRun: "Esegui comunque",
+  ssDontRun: "Non eseguire",
+
+  verifyTitle: "Verifica il file",
+  verifyLead:
+    "Non devi fidarti sulla parola. VirusTotal analizza i file con decine di antivirus diversi, e l'impronta SHA-256 ti dice se il file che hai scaricato è esattamente quello che abbiamo pubblicato.",
+  virusTotal: "Controlla su VirusTotal",
+  virusTotalUpload: "Oppure carica tu il file su VirusTotal",
+  external: "(si apre in una nuova scheda)",
+  hashLabel: "Impronta SHA-256",
+  hashHowTitle: "Verificalo sul tuo PC",
+  hashHow:
+    "Apri PowerShell nella cartella in cui hai scaricato il file e incolla questo comando. Se il risultato coincide con l'impronta qui sopra, il file è integro e non è stato modificato.",
+  commandLabel: "comando PowerShell",
+  copy: "Copia",
+  copied: "Copiato",
+  copyFailed: "Seleziona e copia",
+  copyLabel: (what: string) => `Copia ${what}`,
+};

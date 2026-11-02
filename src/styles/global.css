@@ -36,11 +36,14 @@
     scroll-behavior: smooth;
     scroll-padding-top: 80px;
     -webkit-tap-highlight-color: transparent;
+    overflow-x: clip; /* no sideways scroll on phones (wide fixed background layers) */
   }
   body {
     margin: 0;
     min-height: 100dvh;
-    background: var(--c-bg);
+    /* transparent: html paints the page colour; the fixed AnimatedBackground (z-index -1)
+       must not be covered by a painted body */
+    background: transparent;
     line-height: 1.55;
     font-feature-settings: "ss01", "cv11";
     overflow-x: clip;

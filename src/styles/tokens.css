@@ -44,10 +44,10 @@
 
   /* Type */
   --font-sans: "Geist", "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
-  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
   --font-mono: "Geist Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
 
-  /* Type scale (fluid). Display = Instrument Serif, everything else Geist. */
+  /* Type scale (fluid). Display = Fraunces, everything else Geist. */
   --fs-display: clamp(2.9rem, 1.6rem + 6.2vw, 6.6rem); /* hero statement */
   --fs-h2: clamp(2.1rem, 1.4rem + 3vw, 3.75rem);       /* section titles */
   --fs-h3: 1.1875rem;   /* 19px card / step titles (sans, 560) */

@@ -4,6 +4,8 @@ import { MODES, type ModeKey } from "./modes";
 import type { Ghost } from "./DesktopPreview";
 import {
   GLYPH,
+  GRID_PITCH_X,
+  GRID_PITCH_Y,
   applyDrop,
   blocksScene,
   choreograph,
@@ -11,10 +13,13 @@ import {
   hitTest,
   iosScene,
   messyScene,
-  tileRect,
   type DropHit,
   type Scene,
 } from "./scene";
+
+/** "Blocca" demo: Racing moves by whole grid cells. */
+const RACING_DX = 4 * GRID_PITCH_X;
+const RACING_DY = -2 * GRID_PITCH_Y;
 
 interface Step {
   at: number;
@@ -102,26 +107,50 @@ export function useDemo(rootRef: RefObject<HTMLElement | null>) {
     return p?.kind === "free" ? { x: p.x + GLYPH / 2, y: p.y + GLYPH / 2 } : { x: 480, y: 280 };
   };
 
+  const mediaFolder = () => sceneRef.current.folders.find((f) => f.id === "f-media");
+  const fotoToMedia = () => {
+    const p = sceneRef.current.places.foto;
+    const f = mediaFolder();
+    return p?.kind === "free" && f ? { dx: f.x - p.x, dy: f.y - p.y } : { dx: 0, dy: 0 };
+  };
+
   const scriptFor = (key: ModeKey): Step[] => {
     switch (key) {
       case "ios":
         return [
           { at: 0, run: () => go(messyScene()) },
           { at: 750, run: () => go(iosScene()) },
-          { at: 2500, run: () => setGhost({ x: 700, y: 520, show: true, press: false }) },
+          { at: 2300, run: () => setGhost({ x: 700, y: 520, show: true, press: false }) },
+          { at: 2450, run: () => ghostTo(iconCenter("foto").x, iconCenter("foto").y) },
+          // Foto: presa, portata sulla cartella Media e lasciata lì, così si vede che ci entra
           {
-            at: 2650,
+            at: 3300,
             run: () => {
-              const f = sceneRef.current.folders.find((ff) => ff.id === "f-giochi");
-              if (f) ghostTo(tileRect(f).x + 34, tileRect(f).y + 36);
+              const c = iconCenter("foto");
+              const { dx, dy } = fotoToMedia();
+              setGhostDrag({ id: "foto", dx, dy });
+              ghostTo(c.x + dx, c.y + dy, { press: true });
             },
           },
-          { at: 3500, run: () => (ghostTo(ghostRef.current.x, ghostRef.current.y, { press: true }), setOpen("f-giochi")) },
-          { at: 3700, run: () => setGhost((g) => ({ ...g, press: false })) },
-          { at: 4200, run: () => ghostTo(150, 470) },
-          { at: 5300, run: () => (setGhost((g) => ({ ...g, press: true })), setOpen(null)) },
-          { at: 5500, run: () => setGhost((g) => ({ ...g, press: false })) },
-          { at: 6100, run: () => setGhost((g) => ({ ...g, show: false })) },
+          { at: 4050, run: () => setHitState({ kind: "folder", f: "f-media" }) },
+          {
+            at: 4650,
+            run: () => {
+              const f = mediaFolder();
+              setHitState(null);
+              setGhostDrag(null);
+              setGhost((g) => ({ ...g, press: false }));
+              if (f) setScene((s) => applyDrop(s, "foto", f.x, f.y, null).scene);
+              say("Foto è entrata in Media", "ok");
+            },
+          },
+          // un clic sulla cartella: Foto è dentro
+          { at: 5500, run: () => (setGhost((g) => ({ ...g, press: true })), setOpen("f-media")) },
+          { at: 5700, run: () => setGhost((g) => ({ ...g, press: false })) },
+          { at: 7300, run: () => ghostTo(150, 470) },
+          { at: 8200, run: () => (setGhost((g) => ({ ...g, press: true })), setOpen(null)) },
+          { at: 8400, run: () => setGhost((g) => ({ ...g, press: false })) },
+          { at: 8900, run: () => setGhost((g) => ({ ...g, show: false })) },
         ];
       case "cat":
         return [
@@ -171,8 +200,8 @@ export function useDemo(rootRef: RefObject<HTMLElement | null>) {
             at: 4800,
             run: () => {
               const c = iconCenter("racing");
-              setGhostDrag({ id: "racing", dx: 390, dy: -160 });
-              ghostTo(c.x + 390, c.y - 160, { press: true });
+              setGhostDrag({ id: "racing", dx: RACING_DX, dy: RACING_DY });
+              ghostTo(c.x + RACING_DX, c.y + RACING_DY, { press: true });
             },
           },
           {
@@ -182,7 +211,7 @@ export function useDemo(rootRef: RefObject<HTMLElement | null>) {
               if (p?.kind === "free")
                 setScene((s) => ({
                   ...s,
-                  places: { ...s.places, racing: { kind: "free", x: p.x + 390, y: p.y - 160 } },
+                  places: { ...s.places, racing: { kind: "free", x: p.x + RACING_DX, y: p.y + RACING_DY } },
                   delays: {},
                   v: s.v + 1,
                 }));
@@ -273,6 +302,7 @@ export function useDemo(rootRef: RefObject<HTMLElement | null>) {
     setUserControl(true);
     setGhost((g) => ({ ...g, show: false, press: false }));
     setGhostDrag(null);
+    setHitState(null);
   }, []);
 
   const resume = useCallback(() => {

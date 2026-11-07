@@ -3,6 +3,7 @@ import { MotionConfig } from "motion/react";
 import { AnimatedBackground } from "./components/AnimatedBackground";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
+import { ScrollTop } from "./components/ScrollTop";
 import Hero from "./sections/Hero";
 import Demo from "./sections/Demo";
 import Features from "./sections/Features";
@@ -37,6 +38,7 @@ export default function App() {
         <Download />
       </main>
       <Footer />
+      <ScrollTop />
     </MotionConfig>
   );
 }

@@ -19,6 +19,18 @@ export const STAND_H = 44;
 export const TILE = 60;
 export const TILE_PAD = 8;
 export const MINI_SCALE = 0.28;
+
+/* Desktop grid: every icon, folder and block sits on these cells, and drops snap to them. */
+export const GRID_COLS = 10;
+export const GRID_ROWS = 6;
+export const GRID_PITCH_X = 96;
+export const GRID_PITCH_Y = 90;
+const GRID_X = (SCREEN_W - ((GRID_COLS - 1) * GRID_PITCH_X + GLYPH)) / 2;
+const GRID_Y = 20;
+export const gridCell = (col: number, row: number, monitor: 1 | 2 = 1) => ({
+  x: (monitor === 2 ? MON2_X : 0) + GRID_X + col * GRID_PITCH_X,
+  y: GRID_Y + row * GRID_PITCH_Y,
+});
 const MINI_INSET = 7;
 const MINI_PITCH = (TILE - 2 * MINI_INSET - 3 * GLYPH * MINI_SCALE) / 2 + GLYPH * MINI_SCALE;
 
@@ -154,7 +166,8 @@ export function columnsScene(): Scene {
   const s = base();
   CATEGORIES.forEach((cat, c) => {
     byCat(cat).forEach((id, r) => {
-      s.places[id] = free(30 + c * 88, 20 + r * 90);
+      const cell = gridCell(c, r);
+      s.places[id] = free(cell.x, cell.y);
     });
   });
   return s;
@@ -164,35 +177,51 @@ export function columnsScene(): Scene {
 export const FAVOURITES = ["steam", "brave", "note", "foto"];
 export function iosScene(): Scene {
   const s = base();
-  FAVOURITES.forEach((id, i) => (s.places[id] = free(30, 22 + i * 96)));
+  FAVOURITES.forEach((id, i) => {
+    const cell = gridCell(0, i);
+    s.places[id] = free(cell.x, cell.y);
+  });
   CATEGORIES.forEach((cat, i) => {
     const fid = `f-${cat}`;
     const items = byCat(cat).filter((id) => !FAVOURITES.includes(id));
-    s.folders.push({ id: fid, name: CATEGORY_NAME[cat], x: 268 + i * 128, y: 228, items });
+    s.folders.push({ id: fid, name: CATEGORY_NAME[cat], ...gridCell(3 + i, 2), items });
     items.forEach((id) => (s.places[id] = { kind: "folder", f: fid }));
   });
   return s;
 }
 
 /* Category blocks */
-const BLOCK_W = 340;
+const BLOCK_COLS = 3;
+const BLOCK_PAD = 16;
+const BLOCK_HEAD = 46;
+const BLOCK_W = (BLOCK_COLS - 1) * GRID_PITCH_X + GLYPH + BLOCK_PAD * 2;
 const BLOCK_H = 210;
-type BlockPos = Record<Category, { x: number; y: number }>;
+type BlockCell = { col: number; row: number; monitor: 1 | 2 };
+type BlockPos = Record<Category, BlockCell>;
 const MONO: BlockPos = {
-  giochi: { x: 24, y: 22 },
-  programmi: { x: 596, y: 22 },
-  documenti: { x: 24, y: 324 },
-  media: { x: 596, y: 280 },
+  giochi: { col: 0, row: 1, monitor: 1 },
+  programmi: { col: 7, row: 1, monitor: 1 },
+  documenti: { col: 0, row: 4, monitor: 1 },
+  media: { col: 7, row: 4, monitor: 1 },
 };
 const DUAL: BlockPos = {
-  programmi: { x: 24, y: 22 },
-  documenti: { x: 596, y: 22 },
-  giochi: { x: MON2_X + 24, y: 22 },
-  media: { x: MON2_X + 596, y: 300 },
+  programmi: { col: 0, row: 1, monitor: 1 },
+  documenti: { col: 7, row: 1, monitor: 1 },
+  giochi: { col: 0, row: 1, monitor: 2 },
+  media: { col: 7, row: 4, monitor: 2 },
+};
+
+/** The block's frame: its first icon lands on the grid cell (col,row). */
+const blockFrame = ({ col, row, monitor }: BlockCell) => {
+  const c = gridCell(col, row, monitor);
+  return { x: c.x - BLOCK_PAD, y: c.y - BLOCK_HEAD };
 };
 
 export function blockSlot(b: { x: number; y: number }, i: number) {
-  return { x: b.x + 30 + (i % 4) * 80, y: b.y + 46 + Math.floor(i / 4) * 86 };
+  return {
+    x: b.x + BLOCK_PAD + (i % BLOCK_COLS) * GRID_PITCH_X,
+    y: b.y + BLOCK_HEAD + Math.floor(i / BLOCK_COLS) * GRID_PITCH_Y,
+  };
 }
 
 /** Category blocks; `folders` = each category collapsed into a glass tile. */
@@ -200,15 +229,15 @@ export function blocksScene(folders: boolean, monitors: 1 | 2 = 1): Scene {
   const s = base(monitors);
   const pos = monitors === 2 ? DUAL : MONO;
   CATEGORIES.forEach((cat) => {
-    const p = pos[cat];
+    const cell = pos[cat];
+    const p = blockFrame(cell);
     const ids = byCat(cat);
     if (folders) {
       const fid = `f-${cat}`;
       s.folders.push({
         id: fid,
         name: CATEGORY_NAME[cat],
-        x: p.x + BLOCK_W / 2 - GLYPH / 2,
-        y: p.y + BLOCK_H / 2 - GLYPH / 2 - 8,
+        ...gridCell(cell.col + 1, cell.row, cell.monitor),
         items: ids,
       });
       ids.forEach((id) => (s.places[id] = { kind: "folder", f: fid }));
@@ -247,17 +276,28 @@ export function choreograph(prev: Scene, next: Scene, extra = 0): Scene {
 
 /* ------------------------------ editing ------------------------------ */
 
-const clampX = (scene: Scene, x: number) =>
-  Math.max(6, Math.min(x, (scene.monitors === 2 ? MON2_X + SCREEN_W : SCREEN_W) - GLYPH - 6));
-const clampY = (y: number) => Math.max(6, Math.min(y, USABLE_H - GLYPH - 20));
-
-export function clampPoint(scene: Scene, x: number, y: number) {
-  let cx = clampX(scene, x);
-  // keep icons off the bezel gap between monitors
-  if (scene.monitors === 2 && cx > SCREEN_W - GLYPH - 6 && cx < MON2_X + 6) {
-    cx = cx < (SCREEN_W + MON2_X) / 2 - GLYPH / 2 ? SCREEN_W - GLYPH - 6 : MON2_X + 6;
+/** Nearest grid cell not taken by another icon or folder, for a glyph whose top-left is (x,y). */
+export function snapToGrid(scene: Scene, id: string, x: number, y: number) {
+  const taken: { x: number; y: number }[] = [...scene.folders];
+  for (const [other, p] of Object.entries(scene.places)) {
+    if (other !== id && p.kind === "free") taken.push(p);
   }
-  return { x: cx, y: clampY(y) };
+  const monitors: (1 | 2)[] = scene.monitors === 2 ? [1, 2] : [1];
+  let best: { x: number; y: number } | null = null;
+  let bestD = Infinity;
+  for (const m of monitors) {
+    for (let c = 0; c < GRID_COLS; c++) {
+      for (let r = 0; r < GRID_ROWS; r++) {
+        const cell = gridCell(c, r, m);
+        const d = Math.hypot(cell.x - x, cell.y - y);
+        if (d >= bestD) continue;
+        if (taken.some((t) => Math.abs(t.x - cell.x) < GRID_PITCH_X / 2 && Math.abs(t.y - cell.y) < GRID_PITCH_Y / 2)) continue;
+        best = cell;
+        bestD = d;
+      }
+    }
+  }
+  return best ?? { x, y };
 }
 
 export type DropHit = { kind: "folder"; f: string } | { kind: "icon"; id: string } | null;
@@ -305,7 +345,7 @@ export function applyDrop(
     const inside = cx > pr.x && cx < pr.x + pr.w && cy > pr.y && cy < pr.y + pr.h;
     if (inside) return { scene: bump(scene), open };
     src.items = src.items.filter((i) => i !== id);
-    const pt = clampPoint(scene, x, y);
+    const pt = snapToGrid(scene, id, x, y);
     places[id] = free(pt.x, pt.y);
     let nextOpen: string | null = null;
     if (src.items.length === 1) {
@@ -335,7 +375,7 @@ export function applyDrop(
     places[id] = { kind: "folder", f: fid };
     return { scene: bump({ ...scene, places, folders }), open };
   }
-  const pt = clampPoint(scene, x, y);
+  const pt = snapToGrid(scene, id, x, y);
   places[id] = free(pt.x, pt.y);
   return { scene: bump({ ...scene, places, folders }), open };
 }

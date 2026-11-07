@@ -12,8 +12,8 @@ export const MODES: ModeDef[] = [
   {
     key: "ios",
     title: "Cartelle stile iOS",
-    caption: "Trascina un'icona su un'altra e nasce una cartella di vetro. Un clic e si apre.",
-    duration: 7000,
+    caption: "Trascina un'icona su una cartella di vetro e ci entra. Un clic e si apre.",
+    duration: 9600,
   },
   {
     key: "cat",

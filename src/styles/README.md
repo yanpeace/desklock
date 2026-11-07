@@ -22,7 +22,7 @@ Others via arbitrary values: `rounded-[var(--r-md)]`, `shadow-[var(--sh-3)]`, `b
 | `--glass-*` | folder-tile glass; or just add class `glass` |
 | `--r-xs 6` chips, `--r-sm 10` inputs/code, `--r-md 16` tiles/panels, `--r-lg 24` screens | radii by hierarchy |
 | `--sh-1/2/3`, `--glow-amber` | shadows |
-| `--font-display` Instrument Serif (headlines only, roman, never single-word accents), `--font-sans` Geist, `--font-mono` Geist Mono (code/hash only) | type |
+| `--font-display` Fraunces (headlines only, roman, never single-word accents), `--font-sans` Geist, `--font-mono` Geist Mono (code/hash only) | type |
 | `--fs-display --fs-h2 --fs-h3 --fs-lead --fs-body --fs-small --fs-micro` | type scale |
 | `--gutter` (16px on phones), `--maxw 1180px`, `--section-y` | layout |
 | `--ease-out` `(.22,1,.36,1)`, `--ease-in-out`, `--ease-spring`, `--dur-1/2/3` | motion |

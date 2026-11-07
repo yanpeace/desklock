@@ -260,9 +260,10 @@
 .dl-hero__title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(3.25rem, 1.5rem + 6.8vw, 7.25rem);
-  line-height: 0.96;
-  letter-spacing: -0.025em;
+  font-size: clamp(3rem, 1.4rem + 6vw, 6.5rem);
+  font-variation-settings: "opsz" 36; /* a 144 Fraunces torna stretto e contrastato */
+  line-height: 1;
+  letter-spacing: -0.015em;
   color: var(--c-ink);
   margin: 0;
   max-width: 13ch;

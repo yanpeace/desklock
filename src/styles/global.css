@@ -78,6 +78,37 @@
   }
   .text-link:hover { text-decoration-color: var(--c-amber); }
   .tnum { font-variant-numeric: tabular-nums; }
+  /* "Torna su": pillola di vetro in basso a destra (solo cerchio sui telefoni) */
+  .dl-top {
+    position: fixed;
+    right: max(var(--gutter), env(safe-area-inset-right));
+    bottom: max(20px, env(safe-area-inset-bottom));
+    z-index: 40;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 18px 6px 6px;
+    border-radius: var(--r-pill);
+    background: rgb(32 33 38 / 0.55);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--c-ink);
+    cursor: pointer;
+  }
+  .dl-top:hover { border-color: rgb(240 160 75 / 0.5); }
+  .dl-top__icon { position: relative; display: grid; place-items: center; width: 36px; height: 36px; }
+  .dl-top__ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); fill: none; }
+  .dl-top__track { stroke: var(--c-line-2); stroke-width: 2; }
+  .dl-top__bar { stroke: var(--c-amber); stroke-width: 2; stroke-linecap: round; }
+  .dl-top__arrow { color: var(--c-amber-hi); animation: dl-top-bob 2.2s var(--ease-in-out) infinite; }
+  @media (max-width: 639px) {
+    .dl-top { padding: 6px; }
+    .dl-top__label { display: none; }
+  }
+  @keyframes dl-top-bob {
+    0%, 100% { transform: translateY(1.5px); }
+    50% { transform: translateY(-2.5px); }
+  }
   .sr-only {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
     overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;

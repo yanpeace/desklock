@@ -144,7 +144,7 @@ export default function Demo() {
 function hintFor(key: string) {
   switch (key) {
     case "ios":
-      return "Trascina un'icona su un'altra · clic su una cartella per aprirla";
+      return "Trascina un’icona in una cartella · clic sulla cartella per aprirla";
     case "cat":
       return "Accendi e spegni le cartelle: i blocchi si aprono e si richiudono";
     case "multi":
